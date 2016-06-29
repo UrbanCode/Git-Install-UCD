@@ -1,0 +1,16 @@
+/**
+ * � Copyright IBM Corporation 2014.  
+ * This is licensed under the following license.
+ * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
+ * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
+ */
+
+This plugin currently provides support for Centos, Debian, RHEL, OpenSUSE and Ubuntu 
+
+Here is how to use the plugin:
+
+1) Install the agent on the computer that is the target on which to install Git.
+2) Upload the plugin .zip file from the releases folder ( e.g. GitPlugin_v1.zip ) as a plugin into UCD via "Settings" tab -> "Automation Plugins" -> "Load Plugin".
+3) In order to run, the plugin requires the target agent to have the ability to execute sudo without needing to provide a password (NB: also ensure sudo does not require tty)
+4) Once installed the plugin steps (currently only install) area available in the steps palette in the component process editor
+5) To use the plugin add the "Install" step from the System Utitlies / Git entry in the steps palette to your process.  The step does not need any additional parameters to be provided
