@@ -11,12 +11,12 @@
 -->
 <plugin xmlns='http://www.urbancode.com/PluginXMLSchema_v1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <header>
-    <identifier id='com.urbancode.air.plugin.Git' version='1' name='Git' />
-    <description>The Git Plugin is an automation based plugin. It is used to install git.</description>
+    <identifier id='com.urbancode.air.plugin.GitInstall' version='1' name='Git Install' />
+    <description>The Git Install is an UrbanCode Deploy automation based plugin. It is used to install Git v1.8.3.4.</description>
     <tag>System Utilities/Git</tag>
   </header>
   <step-type name='Install'>
-    <description>Install git on a target server.</description>
+    <description>Install Git v1.8.3.4 on a target server.</description>
     <properties>
     </properties>
     <post-processing><![CDATA[ 
