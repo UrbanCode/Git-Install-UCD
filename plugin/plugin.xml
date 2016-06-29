@@ -12,7 +12,7 @@
 <plugin xmlns='http://www.urbancode.com/PluginXMLSchema_v1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <header>
     <identifier id='com.urbancode.air.plugin.GitInstall' version='1' name='Git Install' />
-    <description>The Git Install is an UrbanCode Deploy automation based plugin. It is used to install Git v1.8.3.4.</description>
+    <description>The Git Install is an IBM UrbanCode Deploy automation based plugin. It is used to install Git v1.8.3.4.</description>
     <tag>System Utilities/Git</tag>
   </header>
   <step-type name='Install'>
