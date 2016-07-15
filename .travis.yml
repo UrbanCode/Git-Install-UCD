@@ -12,6 +12,8 @@ before_install:
   - ant install-ivy
 install:
   - ant
+script:
+  - echo Build Sucessful!
 jdk:
   - oraclejdk8
   - oraclejdk7
