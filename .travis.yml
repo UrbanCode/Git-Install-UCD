@@ -8,7 +8,7 @@
 language: groovy
 rvm:
   - 1.8.8
-before-install:
+before_install:
   - ant install-ivy
 install:
   - ant
