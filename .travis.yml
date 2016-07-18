@@ -8,12 +8,10 @@
 language: groovy
 rvm:
   - 1.8.8
-before_install:
-  - ant install-ivy
 install:
-  - ant
+  - ant install-ivy
 script:
-  - echo Build Sucessful!
+  - ant
 jdk:
   - oraclejdk8
   - oraclejdk7

@@ -1,7 +1,7 @@
 <!--
 
 /**
- * © Copyright IBM Corporation 2014.
+ * © Copyright IBM Corporation 2016.
  * This is licensed under the following license.
  * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
@@ -35,6 +35,7 @@
         <property name="license.dir" value="${basedir}/license" />
         <property name="doc.dir"     value="${basedir}/doc" />
         <property name="lib.dir"     value="${basedir}/lib" />
+        <property name="lib.test.dir"     value="${lib.dir}/test" />
         <target name="main" depends="clean, resolve, build, dist" />
 
         <!-- Copy in the dependencies -->
@@ -71,9 +72,9 @@
             <mkdir dir="${build.dir}/lib"/>
             <!-- copy libs -->
             <copy todir="${build.dir}/lib">
-                <fileset dir="${lib.dir}">
-                    <exclude name="**javadoc.jar" />
-                    <exclude name="**sources.jar" />
+                <fileset dir="${lib.dir}" >
+                    <exclude name="**/build/**"/>
+                    <exclude name="**/test/**"/>
                 </fileset>
             </copy>
 
@@ -94,11 +95,11 @@
         <!-- Retreive all required dependencies from maven repository -->
         <target name="resolve" depends="install-ivy" unless="resolve.no" description="Resolve all dependencies">
             <mkdir dir="${lib.dir}"/>
-            <ivy:cachepath pathid="${lib.dir}">
-                <!-- http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.ibm.urbancode.plugins%22 -->
-                <dependency org="com.ibm.urbancode.plugins" name="groovy-plugin-utils" rev="1.0" transitive="false" />
-            </ivy:cachepath>
-            <ivy:retrieve />
+            <mkdir dir="${lib.dir}/build"/> 
+            <mkdir dir="${lib.dir}/test"/> 
+            <ivy:retrieve conf="default" pattern="${lib.dir}/[artifact]-[revision](-[classifier]).[ext]"/>
+            <ivy:retrieve conf="build" pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]"/>
+            <ivy:retrieve conf="test" pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]"/>
         </target>
 
         <!-- Install Ivy -->
