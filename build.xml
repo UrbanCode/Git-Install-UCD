@@ -137,7 +137,7 @@
         <!-- DIST TARGET                                         -->
         <!-- =================================================== -->
         <target name="dist" depends="resolve">
-            <zip destfile="${pluginDist}" basedir="${build.dir}" update="false"/>
+            <zip destfile="${pluginDist}" basedir="${build.plugin.dir}" update="false"/>
         </target>
 
         <!-- =================================================== -->
