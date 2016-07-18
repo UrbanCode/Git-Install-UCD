@@ -17,7 +17,7 @@
         <conf name="test" description="Jars used during testing"/>
     </configurations>
     <dependencies>
-        <!-- Runtime -->
+        <!-- Runtime Dependencies -->
         <!-- http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.ibm.urbancode.plugins%22 -->
         <dependency org="com.ibm.urbancode.plugins" name="groovy-plugin-utils" rev="1.0" transitive="false" conf="default->default"/>
         
@@ -26,5 +26,7 @@
         <dependency org="junit" name="junit" rev="4.11" transitive="false"  conf="test->default"/>
         <!-- http://search.maven.org/#artifactdetails%7Corg.hamcrest%7Chamcrest-core%7C1.3%7Cjar -->
         <dependency org="org.hamcrest" name="hamcrest-core" rev="1.3" transitive="false" conf="test->default"/>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="1.8.8" conf="test->default"/>
     </dependencies>
 </ivy-module>

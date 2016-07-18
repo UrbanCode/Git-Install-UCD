@@ -10,6 +10,8 @@ rvm:
   - 1.8.8
 install:
   - ant install-ivy
+before_script:
+  - ant run-tests
 script:
   - ant
 jdk:
