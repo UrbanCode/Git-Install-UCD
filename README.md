@@ -1,6 +1,7 @@
 # IBM UrbanCode Deploy Git Install Plugin 
 ---
 [![Build Status](https://travis-ci.org/IBM-UrbanCode/Git-Install-UCD.svg?branch=master)](https://travis-ci.org/IBM-UrbanCode/Git-Install-UCD)
+
 Note: This is not the plugin distributable! This is the source code. To find the installable plugin, go into the 'Releases' tab, and download a stable version.
 
 ### License
