@@ -1,21 +1,20 @@
-##
-# © Copyright IBM Corporation 2016.  
-# This is licensed under the following license.
-# The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
-# U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
-##
-
 language: groovy
 rvm:
-  - 1.8.8
+- 1.8.8
 install:
-  - ant install-ivy
+- ant install-ivy
 before_script:
-  - ant run-tests
+- ant run-tests
 script:
-  - ant
+- ant
 jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
+- oraclejdk8
+- oraclejdk7
+- openjdk7
+- openjdk6
+notifications:
+  slack:
+    secure: shw0IVmebbe6rfCrYJvPP0xH59777rKiiT1ZIaFVs9zwa9w+zW8dR4ML+aPRQrLpogKgmTEoRGxX2Y6a9r3F5XO87qcrt3HjPgs0d/HOX4+F7B0HkDQlcKlHlq+xSk4b0NxSOf/94WfHNJoZXlKZTWgLcVj19Z3oemtpUyuLfAkWKgwLkJuCC0n+MLHLZ+PoyhVUDzDEELL9QxWuxKyr60/Dsyp01HAJNHPflz9t92sn8EMPeVEbXgjXP81tMhzttX+jtoe2GEoeGgXrt3AHGL4zASxs/kh/RXwpJMNQnbqXo2K6BNcELLj9RO63WizPt7+MC7Zd6mThTyj/IZdVfmJvWR/8rVyOVKL8IHEF4wqGVS31AD2AuoL9+csqGsjB4IUYz3mUHwBS6mugWz//QxJAz3pWCEtUqDYaJx/pTheE4sJjsjDdvrvcBhggBx1fDwCSWjGNklYKJOLmI9vrXFFoOBkWAwyJ8176moHuggmOO/1TP5qUbBo2yK3pKfSLqkg25WsCWrvqRthYBMmkRCR6H2GbREQpIZXN562/QnMJWhLFeu3exIjSwhidjRHGI+D45CvK+33RU+hHEOdgXbjljjGMieht91/zVH7xtuFlidTcGAdSTLTkjN2SS1WHWDOYd4vFa5PKiiO02ramtMvopXcMF6NXkFWCREXAVgM=
+    on_success: change
+    on_failure: always
+  email: false
