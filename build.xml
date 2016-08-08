@@ -13,26 +13,35 @@
 
         <property name="build.dir"          value="${basedir}/build" />
         <property name="build.plugin.dir"   value="${build.dir}/plugin" />
-        <property name="build.test.dir"     value="${build.dir}/test" />
-        <property name="build.test.java.dir" value="${build.test.dir}/java" />
+        <property name="build.tmp.dir"      value="${build.dir}/tmp" />
+        <property name="build.tmp.groovy.dir"   value="${build.tmp.dir}/groovy" />
+        <property name="build.tmp.java.dir"     value="${build.tmp.dir}/java" />
+        <property name="build.test.dir"         value="${build.dir}/test" />
+        <property name="build.test.java.dir"    value="${build.test.dir}/java" />
         <property name="build.test.classes.dir" value="${build.test.dir}/classes" />
         <property name="license.dir"        value="${basedir}/license" />
         <property name="plugin.dir"         value="${basedir}/plugin" />
         <property name="src.dir"            value="${basedir}/src" />
-        <property name="src.classes.dir"    value="${src.dir}/classes" />
+        <property name="src.groovy.dir"     value="${src.dir}/groovy" />
+        <property name="src.java.dir"       value="${src.dir}/java" />
         <property name="src.test.dir"       value="${src.dir}/test" />
         <property name="src.test.java.dir"  value="${src.test.dir}/java" />
         <property name="doc.dir"            value="${basedir}/doc" />
         <property name="lib.dir"            value="${basedir}/lib" />
         <property name="lib.build.dir"      value="${lib.dir}/build" />
+        <property name="lib.build.classes.dir" value="${lib.build.dir}/classes" />
+        <property name="lib.test.dir"      value="${lib.dir}/test" />
+        <property name="lib.test.java.dir"      value="${lib.test.dir}/java" />
         <property name="lib.test.dir"       value="${lib.dir}/test" />
         <property name="releases.dir"       value="${basedir}/releases" />
         <property name="releases.report.dir"  value="${releases.dir}/report" />
 
-        <property name="version" value="dev" />
-        <property name="pluginDist" value="${releases.dir}/Git-Install-UCD-v${version}.zip" />
 
-        <target name="main" depends="clean, resolve, build, dist">
+        <property name="version" value="dev" />
+        <property name="plugin" value="Git-Install-UCD" />
+        <property name="pluginDist" value="${releases.dir}/${plugin}-v${version}.zip" />
+
+        <target name="main" depends="clean, resolve, compile-classes, build, dist">
             <echo>Plugin build complete!</echo>
         </target>
 
@@ -66,7 +75,7 @@
         <target name="taskdef" unless="taskdef.no">
             <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
                 <classpath>
-                    <path refid="classpath.test"/>
+                    <path refid="classpath.build"/>
                 </classpath>
             </taskdef>
         </target>
@@ -87,6 +96,8 @@
                 </fileset>
 
                 <fileset dir="${src.dir}">
+                    <exclude name="**/groovy/"/>
+                    <exclude name="**/java/"/>
                     <exclude name="**/test/**"/>
                 </fileset>
             </copy>
@@ -116,6 +127,18 @@
                 </fileset>
             </copy>
 
+             <!-- Copy Groovy and Java Classes -->
+            <mkdir dir="${build.plugin.dir}/classes"/>
+            <copy todir="${build.plugin.dir}/classes">
+                <fileset dir="${src.dir}/groovy">
+                    <include name="**/*.groovy" />
+                </fileset>
+            </copy>
+            <copy todir="${build.plugin.dir}/classes">
+                <fileset dir="${lib.build.classes.dir}">
+                    <include name="**/*.class" />
+                </fileset>
+            </copy>
         </target>
 
         <!-- =================================================== -->
@@ -175,13 +198,13 @@
         <!-- TEST TARGET                                         -->
         <!-- =================================================== -->
 
-        <target name="run-tests" depends="resolve, taskdef, compile-classes, compile-tests" unless="tests.no">
+        <target name="run-tests" depends="compile-classes, compile-tests" unless="tests.no">
 
             <mkdir dir="${releases.report.dir}"/>
             <junit printsummary="yes" haltonfailure="no" showoutput="false" failureproperty="tests.failed">
 
                 <classpath refid="classpath.test" />
-                <classpath location="${build.test.java.dir}" />
+                <classpath location="${lib.test.java.dir}" />
 
                 <formatter type="xml" />
                 <formatter type="plain" />
@@ -199,22 +222,28 @@
         <!-- =================================================== -->
         <!-- COMPILE TARGETS                                     -->
         <!-- =================================================== -->
-        <target name="compile-classes" description="Compile Groovy or Java classes." depends="resolve">
-            <!--<mkdir dir="${build.test.classes.dir}"/>
-            <groovyc srcdir="${src.dir}" destdir="${build.test.classes.dir}">
+        <target name="compile-classes" description="Compile Groovy or Java classes." depends="resolve, taskdef">
+            <!-- Groovy -->
+            <mkdir dir="${build.tmp.groovy.dir}"/>
+            <groovyc srcdir="${src.dir}" destdir="${build.tmp.groovy.dir}">
                 <include name="**/*.groovy"/>
+                <classpath refid="classpath.build"/>
                 <javac debug="on" deprecation="true"/>
             </groovyc>
-            
-            <javac srcdir="${src.classes.dir}" destdir="${build.test.classes.dir}" includeantruntime="false">
+            <delete dir="${build.tmp.groovy.dir}" />
+
+            <!-- Java -->
+            <mkdir dir="${lib.build.classes.dir}"/>
+            <javac srcdir="${src.java.dir}" destdir="${lib.build.classes.dir}" includeantruntime="false">
                 <include name="**/*.java"/>
-                <classpath refid="classpath.test"/>
-            </javac>-->
+                <classpath refid="classpath.build"/>
+            </javac>
         </target>
 
+        <!-- Java Tests -->
         <target name="compile-tests" description="Compile Java Test Files..." depends="compile-classes">
-            <mkdir dir="${build.test.java.dir}"/>
-            <javac srcdir="${src.test.java.dir}" destdir="${build.test.java.dir}" includeantruntime="false">
+            <mkdir dir="${lib.test.java.dir}"/>
+            <javac srcdir="${src.test.java.dir}" destdir="${lib.test.java.dir}" includeantruntime="false">
                 <classpath refid="classpath.test"/>
             </javac>
         </target>
