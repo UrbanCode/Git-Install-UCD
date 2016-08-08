@@ -2,7 +2,7 @@
 <!--
 
  /**
-  * © Copyright IBM Corporation 2014.  
+  * © Copyright IBM Corporation 2016.  
   * This is licensed under the following license.
   * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
   * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
@@ -11,26 +11,187 @@
 -->
 <plugin xmlns='http://www.urbancode.com/PluginXMLSchema_v1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <header>
-    <identifier id='com.urbancode.air.plugin.GitInstall' version='1' name='Git Install' />
-    <description>The Git Install is an IBM UrbanCode Deploy automation based plugin. It is used to install Git v1.8.3.4.</description>
+    <identifier id='com.urbancode.air.plugin.GitInstall' version='2' name='Git Install' />
+    <description>The Git Install is an IBM UrbanCode Deploy automation based plugin. It is used to install Git v1.8.3.4 and other basic Git functionality.</description>
     <tag>System Utilities/Git</tag>
   </header>
-  <step-type name='Install'>
+  <step-type name='Install Git'>
     <description>Install Git v1.8.3.4 on a target server.</description>
     <properties>
     </properties>
     <post-processing><![CDATA[ 
- if (properties.get("exitCode") != 0) {
- properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
- }
- else { 
- properties.put("Status", "Success"); 
- }
- ]]></post-processing>
+        if (properties.get("exitCode") != 0) {
+        properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else { 
+        properties.put("Status", "Success"); 
+        }
+    ]]></post-processing>
     <command program='${GROOVY_HOME}/bin/groovy'>
       <arg value='-cp' />
       <arg path='classes:lib/groovy-plugin-utils-1.0.jar' />
       <arg file='install.groovy' />
+      <arg file='${PLUGIN_INPUT_PROPS}' />
+      <arg file='${PLUGIN_OUTPUT_PROPS}' />
+    </command>
+  </step-type>
+  <step-type name='Create Repository'>
+    <description>Create an empty repository on GitHub.</description>
+    <properties>
+        <property name="gitHubUrl">
+            <property-ui type="textBox"
+                            label="GitHub Hostname"
+                            description="The GitHub hostname you want to create the repository on. Leave blank to create the repository on the public github.com."
+                            placeholder="https://api.github.com" />
+        </property>
+        <property name="username" required="true">
+            <property-ui type="textBox"
+                            label="GitHub Username"
+                            description="Specify the username for GitHub credentials." />
+        </property>
+        <property name="password" required="true">
+            <property-ui type="secureBox"
+                            label="GitHub Password"
+                            description="Specify the password for GitHub credentials." />
+        </property>
+        <property name="organization">
+            <property-ui type="textBox"
+                            label="Organization"
+                            description="Specify an organization to create the repository under. The Username must be a part of this organization." />
+        </property>
+        <property name="names" required="true">
+            <property-ui type="textAreaBox"
+                            label="Repository Name"
+                            description="The name of the respository. Separate multiple names with a new line or comma." />
+        </property>
+        <property name="description">
+            <property-ui type="textBox"
+                            label="Description"
+                            description="Specify a description for the respository." />
+        </property>
+        <property name="homepage">
+            <property-ui type="textBox"
+                            label="Homepage"
+                            description="Specify a homepage to associate with the repository." />
+        </property>
+        <property name="privateRepo">
+            <property-ui type="checkBox"
+                            label="Private Repository"
+                            description="Select to create a private repository. Private repositories required a paying GitHub account."
+                            default-value="false"
+                            hidden="true" />
+        </property>
+        <property name="has_issues">
+            <property-ui type="checkBox"
+                            label="Enable Issues"
+                            description="Enable Issues tab to be created within the respository." 
+                            default-value="true"
+                            hidden="true" />
+        </property>
+        <property name="has_wiki">
+            <property-ui type="checkBox"
+                            label="Enable Wiki"
+                            description="Enable a Wiki documentation tab within the respository." 
+                            default-value="true"
+                            hidden="true" />
+        </property>
+        <property name="has_downloads">
+            <property-ui type="checkBox"
+                            label="Enable Releases"
+                            description="Enable a Releases tab within the repository." 
+                            default-value="false"
+                            hidden="true" />
+        </property>
+        <property name="team_id">
+            <property-ui type="textBox"
+                            label="Team ID"
+                            description="Grant a team access to this repository through 6 digit ID. Organization property is required." 
+                            hidden="true" />
+        </property>
+        <property name="auto_init">
+            <property-ui type="checkBox"
+                            label="Empty README"
+                            description="Initialize with an empty README file."
+                            default-value="false"
+                            hidden="true" />
+        </property>
+        <property name="gitignore_template">
+            <property-ui type="textBox"
+                            label=".gitignore Template"
+                            description="Specify the repository's .gitignore template. Name the template without its extension." 
+                            hidden="true" />
+        </property>
+        <property name="license_template">
+            <property-ui type="textBox"
+                            label="License Template"
+                            description="Specify the repository's license template. Name the template without its extension." 
+                            hidden="true" />
+        </property>
+    </properties>
+    <post-processing><![CDATA[ 
+        if (properties.get("exitCode") != 0) {
+        properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else { 
+        properties.put("Status", "Success"); 
+        }
+    ]]></post-processing>
+    <command program='${GROOVY_HOME}/bin/groovy'>
+      <arg value='-cp' />
+      <arg path='classes:lib/groovy-plugin-utils-1.0.jar:lib/httpcore-4.4.4.jar:lib/httpclient-4.5.2.jar:lib/commons-codec-1.9.jar' />
+      <arg file='createRepository.groovy' />
+      <arg file='${PLUGIN_INPUT_PROPS}' />
+      <arg file='${PLUGIN_OUTPUT_PROPS}' />
+    </command>
+  </step-type>
+    <step-type name='Migrate Repository'>
+    <description>Migrate an external Git Repository to GitHub.</description>
+    <properties>
+        <property name="extUrl" required="true">
+            <property-ui type="textBox"
+                            label="External Repo URL"
+                            description="The full (http:// or ssh://) external repo.git URL to migrate the repository from."
+                            placeholder="https://hostname.com" />
+        </property>
+        <property name="extUsername" required="false">
+            <property-ui type="textBox"
+                            label="External Username"
+                            description="Specify the username for external credentials. Only required for 'ssh://' clone URLs." />
+        </property>
+        <property name="extPassword" required="false">
+            <property-ui type="secureBox"
+                            label="External Password"
+                            description="Specify the password for external credentials." />
+        </property>
+        <property name="ghUrl" required="true">
+            <property-ui type="textBox"
+                            label="GitHub Repo HTTPS URL"
+                            description="The GitHub HTTPS URL to use as the new repository. This can be copied from the GitHub repository project page."
+                            placeholder="https://github.com/ghuser/repo.git" />
+        </property>
+        <property name="ghUsername" required="true">
+            <property-ui type="textBox"
+                            label="GitHub Username"
+                            description="Specify the username for GitHub credentials." />
+        </property>
+        <property name="ghPassword" required="true">
+            <property-ui type="secureBox"
+                            label="GitHub Password"
+                            description="Specify the password for GitHub credentials." />
+        </property>
+    </properties>
+    <post-processing><![CDATA[ 
+        if (properties.get("exitCode") != 0) {
+        properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else { 
+        properties.put("Status", "Success"); 
+        }
+    ]]></post-processing>
+    <command program='${GROOVY_HOME}/bin/groovy'>
+      <arg value='-cp' />
+      <arg path='classes:lib/groovy-plugin-utils-1.0.jar' />
+      <arg file='migrateRepository.groovy' />
       <arg file='${PLUGIN_INPUT_PROPS}' />
       <arg file='${PLUGIN_OUTPUT_PROPS}' />
     </command>

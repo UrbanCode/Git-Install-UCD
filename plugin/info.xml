@@ -2,7 +2,7 @@
 <!--
 
  /**
-  * © Copyright IBM Corporation 2014.  
+  * © Copyright IBM Corporation 2016.  
   * This is licensed under the following license.
   * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
   * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
@@ -30,7 +30,7 @@
   
   <integration type="Deploy"/>
     
-  <source url="https://hub.jazz.net/project/ucplugin/UrbanCode%20Deploy%20Plug-In%20for%20Git/overview"/>
+  <source url="https://github.com/IBM-UrbanCode/Git-Install-UCD"/>
     
   
   <licenses>
@@ -51,12 +51,17 @@
   </meta-html>
     
   <!-- Do not change the release-version, the build process injects it. -->
-  <release-version>1.0</release-version>
+  <release-version>2.0</release-version>
     
     
   <release-notes>      
 	  <release-note plugin-version="1">
 Initial release of the Git plugin which provides steps for installing git.
+	  </release-note>     
+	  <release-note plugin-version="2">
+Added functionality to:
+    - Create Repository
+    - Migrate Repository
 	  </release-note>
   </release-notes>
 </pluginInfo>

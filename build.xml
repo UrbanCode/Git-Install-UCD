@@ -11,20 +11,6 @@
 
 <project name="GitInstall" default="main" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
-        <dirname property="com.ibm.rational.raf.deploy.plugin.build.project" file="${ant.file.com.ibm.rational.raf.deploy.plugin}" />
-        <dirname property="workspace" file="${com.ibm.rational.raf.deploy.plugin.build.project}" />
-
-        <!-- assumes the build.properties is set via the command line ANT invocation -->
-        <property name="build.properties" value="build.properties" />
-        <property file="${workspace}/builder/ant-common/${build.properties}" />
-
-        <!-- bring in common_build_tokens filterset -->
-        <property name="DISPLAY_VERSION" value="1.0" />
-
-        <tstamp>
-            <format property="TODAY_X" pattern="yyMMdd" locale="en" />
-        </tstamp>
-
         <property name="build.dir"          value="${basedir}/build" />
         <property name="build.plugin.dir"   value="${build.dir}/plugin" />
         <property name="build.test.dir"     value="${build.dir}/test" />
@@ -43,7 +29,6 @@
         <property name="releases.dir"       value="${basedir}/releases" />
         <property name="releases.report.dir"  value="${releases.dir}/report" />
 
-        <property name="project" value="" />
         <property name="version" value="dev" />
         <property name="pluginDist" value="${releases.dir}/Git-Install-UCD-v${version}.zip" />
 
@@ -165,10 +150,25 @@
         <!-- INSTALL IVY TARGET                                  -->
         <!-- =================================================== -->
         <available classname="org.apache.ivy.Main" property="ivy.installed"/>
-        <target name="install-ivy" description="Install ivy" unless="ivy.installed">
-            <mkdir dir="${user.home}/.ant/lib"/>
-            <get dest="${user.home}/.ant/lib/ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar"/>
-            <echo message="Apache Ivy has been installed to download dependencies!"/>
+        <target name="install-ivy" depends="-install, -fail"></target>
+
+        <target name="-install" description="Install ivy" unless="ivy.installed">
+            <!-- Installation -->
+            <property name="antHome" value="${user.home}${file.separator}.ant"/>
+            <mkdir dir="${antHome}${file.separator}lib"/>
+            <get dest="${antHome}${file.separator}lib${file.separator}ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar"/>
+            <echo message="SUCCESS! Ivy has been installed in ${antHome}." />
+
+            <!-- Determine whether to continue or fail -->
+            <property name="failIvy" value="true"/>
+            <condition property="do.fail">
+                <equals arg1="${failIvy}" arg2="true" />
+            </condition>
+        </target>
+
+        <!-- Default to fail if Ivy installed, unless -DfailIvy=false : Used for .travis -->
+        <target name="-fail" if="do.fail">
+            <fail message="Please run the build again.${line.separator}Note: If you get this message more than once, trying specify your Ant's home directory with the flag: ant -DantHome='ant/home/directory/here'" />
         </target>
 
         <!-- =================================================== -->
@@ -199,8 +199,8 @@
         <!-- =================================================== -->
         <!-- COMPILE TARGETS                                     -->
         <!-- =================================================== -->
-        <target name="compile-classes" description="Compile Groovy or Java classes.." depends="resolve">
-            <mkdir dir="${build.test.classes.dir}"/>
+        <target name="compile-classes" description="Compile Groovy or Java classes." depends="resolve">
+            <!--<mkdir dir="${build.test.classes.dir}"/>
             <groovyc srcdir="${src.dir}" destdir="${build.test.classes.dir}">
                 <include name="**/*.groovy"/>
                 <javac debug="on" deprecation="true"/>
@@ -209,7 +209,7 @@
             <javac srcdir="${src.classes.dir}" destdir="${build.test.classes.dir}" includeantruntime="false">
                 <include name="**/*.java"/>
                 <classpath refid="classpath.test"/>
-            </javac>
+            </javac>-->
         </target>
 
         <target name="compile-tests" description="Compile Java Test Files..." depends="compile-classes">
