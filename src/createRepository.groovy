@@ -1,5 +1,5 @@
 /**
- * © Copyright IBM Corporation 2016.  
+ * ï¿½ Copyright IBM Corporation 2016.  
  * This is licensed under the following license.
  * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
@@ -11,8 +11,9 @@ import groovy.json.JsonBuilder
 
 import com.plugins.RestHelper
 
-final airTool = new AirPluginTool(args[0], args[1])
-final def props = airTool.getStepProperties()
+import com.urbancode.plugin.helper.NewAirPluginTool
+airTool = new NewAirPluginTool(args[0], args[1])
+def props = airTool.getStepProperties()
 
 // Retrieve Properties
 def github        = props['gitHubUrl'].trim()
@@ -37,8 +38,8 @@ try {
     // Enterprise: https://[hostname]/api/v3/...
     
     def fullURL = ""
-    final def enterprisePath ="/api/v3" //Only needed for enterprise
-    final def publicGitHub = "https://api.github.com"
+    def enterprisePath ="/api/v3" //Only needed for enterprise
+    def publicGitHub = "https://api.github.com"
     
     if (!github || (publicGitHub == github)) {
         github = publicGitHub
