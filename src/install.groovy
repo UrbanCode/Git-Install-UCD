@@ -1,5 +1,5 @@
 /**
- * © Copyright IBM Corporation 2014.  
+ * ï¿½ Copyright IBM Corporation 2014.  
  * This is licensed under the following license.
  * The Eclipse Public 1.0 License (http://www.eclipse.org/legal/epl-v10.html)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
@@ -13,12 +13,12 @@ def isEmpty(value) {
 }
 
 //////////////////////MAIN////////////////////////
-final def isWindows = (System.getProperty('os.name') =~ /(?i)windows/).find()
-final def workDir = new File('.').absolutePath
-final def compName = new File(".").getCanonicalFile().name //this gets resolved to component name
-final def props = new Properties()
-final def inputPropsFile = new File(args[0])
-final def inputPropsStream = null
+def isWindows = (System.getProperty('os.name') =~ /(?i)windows/).find()
+def workDir = new File('.').absolutePath
+def compName = new File(".").getCanonicalFile().name //this gets resolved to component name
+def props = new Properties()
+def inputPropsFile = new File(args[0])
+def inputPropsStream = null
 try {
     inputPropsStream = new FileInputStream(inputPropsFile)
     props.load(inputPropsStream)
